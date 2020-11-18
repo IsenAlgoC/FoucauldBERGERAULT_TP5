@@ -1,6 +1,7 @@
 #include<stdlib.h>
 #include"tab.h"
 #include<stdio.h>
+#define TAILLEAJOUT 50
 
 int initTab(int* tab, int size) {
 	if (tab == NULL || size < 0) {
@@ -26,4 +27,12 @@ int afficheTab(int* tab, int size, int nbElts)
 	printf("\n");
 
 	return 0;
+}
+
+int* ajoutElementDansTableau(int* tab, int* size, int* nbElts, int element) {
+	realloc(tab,TAILLEAJOUT);
+	*(tab + *nbElts) = element;
+	nbElts += 1;
+	return nbElts;
+
 }

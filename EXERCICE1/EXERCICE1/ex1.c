@@ -35,10 +35,12 @@ int main() {
 	afficheTab(myTab2, 20, 20);
 
 	//Destruction du tableau
-	free(myTab2);
+
+	//free(myTab2);
 	
 	// PARTIE 2 -----------------------------------------------------------------------------------------------------------
-
+	ajoutElementDansTableau(myTab2, 20, 20, 21);
+	afficheTab(myTab2, 21, 21);
 
 
 	return EXIT_SUCCESS;
