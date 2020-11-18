@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include"tab.h"
+#include<stdio.h>
 
 int initTab(int* tab, int size) {
 	if (tab == NULL || size < 0) {
@@ -20,9 +21,9 @@ int afficheTab(int* tab, int size, int nbElts)
 		return -1;
 	}
 	for (int i = 0; i < nbElts; i++) {
-		printf("%d\n", *(tab + i));
+		printf("%d ", *(tab + i));
 	}
-
+	printf("\n");
 
 	return 0;
 }
