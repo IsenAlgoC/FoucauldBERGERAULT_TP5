@@ -12,3 +12,5 @@ int AfficherTab(TABLEAU tab);
 int setElement(TABLEAU* tab, int pos, int element);
 
 int displayElements(TABLEAU* tab, int startPos, int endPos);
+
+int deleteElements(TABLEAU* tab, int startPos, int endPos);

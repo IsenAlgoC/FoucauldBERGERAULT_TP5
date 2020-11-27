@@ -25,11 +25,15 @@ TABLEAU newArray()
 
 int incrementArraySize(TABLEAU* tab, int incrementValue)
 {
-	//int* tabTransit = NULL;
-	//tabTransit = (int*)realloc(tab->elt, tab->size + incrementValue * sizeof(int));
-	//tab->elt = tabTransit;
-	tab->elt = (int*)realloc(tab->elt, tab->size + incrementValue * sizeof(int));
-	tab->size += incrementValue;
+
+	if (tab->elt == NULL) {
+		return -1;
+	}
+	else {
+		tab->elt = (int*)realloc(tab->elt, (tab->size + incrementValue) * sizeof(int));//On agrandi le tableau de incrementValue
+		tab->size += incrementValue;//Indique la nouvelle taille du tableau
+	}
+
 
 	return (tab->size);
 }
@@ -45,45 +49,78 @@ int AfficherTab(TABLEAU tab)
 }
 
 int setElement(TABLEAU* tab, int pos, int element) {
-	
+	//tab [0] correspond à la position 1 d'après la consigne
 	if (tab->elt == NULL || pos < 1) {
 	return 0;//Renvoi 0 en cas d'erreur
 	}
 	
-	if (pos < tab->size +1) {
-		*(tab->elt + pos-1) = element;
+	if (pos < tab->size +1) {// Si la postion demandé est contenue dans le tableau
+		*(tab->elt + pos-1) = element;//On met la valeur element a la postion pos
 	}
 	else{
-		int differenceDeTaille = pos - tab->size;
-		printf("1erpassage");
-		incrementArraySize(tab, differenceDeTaille);
-		for (int i = 0; i < differenceDeTaille; i++) {
-			*(tab->elt + tab->size + i) = 1;
-			printf("passage");
-
+		int differenceDeTaille = pos - tab->size;// On calcul la differnce de taille entre le tableau initial et le nouveau qui va contenir la position voulue
+		int SizeInit = tab->size;//On enregistre la taille du tableau avant son agrandissement
+		incrementArraySize(tab, differenceDeTaille);//On complète le tableau pour qu'il contiene la position souhaite
+		for (int i = 0; i < differenceDeTaille-1; i++) { //On initalise la nouvelle partie du tableau avec des 0
+			*(tab->elt + SizeInit + i) = 0;
 		}
+		*(tab->elt + tab->size - 1) = element;// on met la valeur element a la postion pos
 		
 }
 }
 
 int displayElements(TABLEAU* tab, int startPos, int endPos)
-{
-	if (tab->elt == NULL || startPos<0) {
-		return(-1);
+{     //tab [0] correspond à la position 1. Pour garder la meme logique que la fonction précédente
+	if (tab->elt == NULL) {
+		return(-1);// Si pas de tableau on retourne -1
 	}
 	
-	else if (endPos > tab->size) {
+	if (endPos > tab->size) {//Si on veut afficher plus que ce qui existe on reduit endpos pour afficher le tableau jusqu'a la fin
 		endPos = tab->size;
-		printf("\n positions demandé n'existe pas, l'affichage s'arrette avec la dernière position du tableau\n");
-		return(-1);
+		printf("\n Certaines positions demandees n'existe pas, l'affichage s'arrete a la dernière position du tableau\n");
+	}
+	 if (startPos >= endPos) {//La consigne ne precisez pas la facon de traiter ce cas, j'ai donc choisi de le traiter comme ceci
+		printf("\n tab[%d] positon :%d   = %d", endPos-1, endPos, *(tab->elt + endPos-1));//Si startPos>=endPos on affiche EndPos
+		return(0);
 	}
 
-	for (int i = startPos; i < endPos; i++) {
-
-		printf("\n tab[%d] = %d", i, *(tab->elt + i));
+	if (startPos < 1) {// Si on start post negatif on met startPos à 0
+		startPos = 1;
+		printf("Les tableau n'ont pas de position négatives. Le tableau affiche les valeurs à partir de l'indexe 0");
 	}
+
+	for (int i = startPos; i < endPos+1; i++) {//On affiche les elements compris entre startPos et endPos
+
+		printf("\n tab[%d] positon :%d   = %d", i-1,i, *(tab->elt + i-1));
+	}
+	printf("\n");
 
 	return (0);
 }
+
+int deleteElements(TABLEAU* tab, int startPos, int endPos)
+// J'ai choisi que cette fonction supprimer tout les elments de l'intervalle ferme [stardPos ; endPos]
+{
+	if (tab->elt == NULL) {
+		return(-1);
+	}
+	int NbElementSuppr = 0,NewSize=0; 
+	NbElementSuppr = endPos - startPos +1;// Nombre d'elts que l'on veut supprimer du tableau
+	NewSize = tab->size - NbElementSuppr;
+	if (NbElementSuppr > tab->size - endPos ) {
+		NbElementSuppr = tab->size - endPos ;
+	}
+	int j=0;
+	for (j; j < NbElementSuppr; j++) {
+		*(tab->elt + startPos -1 + j) = *(tab->elt + endPos + j);// On met les elments placé après la zone de suppression a la place de ceux qui vont etre surpprime
+	}
+	//tab->size = NewSize;
+	//free(tab->elt + startPos + j);
+
+	
+
+	return 0;
+}
+
 
 
