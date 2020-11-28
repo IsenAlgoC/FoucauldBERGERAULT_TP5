@@ -41,8 +41,10 @@ int main() {
 	
 	// PARTIE 2 -----------------------------------------------------------------------------------------------------------
 	printf("\nPartie2 \n ");
-	ajoutElementDansTableau(myTab2, 20, 20, 21);
-	printf("\n%d",afficheTab(myTab2, 21, 21));
+	int tabSize = 20, nbElts = 20;
+	ajoutElementDansTableau(myTab2, &tabSize, &nbElts, 21);
+	printf("\n");
+	afficheTab(myTab2, 70, 21);
 
 
 	return EXIT_SUCCESS;

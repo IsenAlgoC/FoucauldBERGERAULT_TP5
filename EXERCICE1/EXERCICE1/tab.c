@@ -30,16 +30,17 @@ int afficheTab(int* tab, int size, int nbElts)
 }
 
 int* ajoutElementDansTableau(int* tab, int* size, int* nbElts, int element) {
-	if (tab == NULL) {
+	if (tab == NULL || size == NULL || nbElts == NULL || *size < 0 || *nbElts < 0) {
 		return(-1);
 	}
 	if (nbElts <= size) {
-		tab = (int*)realloc(tab, TAILLEAJOUT * sizeof(int));
 		*size += TAILLEAJOUT;
+		tab = (int*)realloc(tab, *(size) * sizeof(int));
 	}
+	//*(tab + *nbElts) = element;
 	tab[*nbElts] = element;
 	*nbElts += 1;
-	return(*nbElts);
+	return(tab);
 
 
 
