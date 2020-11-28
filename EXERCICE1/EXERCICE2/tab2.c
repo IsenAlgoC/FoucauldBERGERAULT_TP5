@@ -38,15 +38,7 @@ int incrementArraySize(TABLEAU* tab, int incrementValue)
 	return (tab->size);
 }
 
-int AfficherTab(TABLEAU tab)
-{
-	for (int i = 0; i < tab.size; i++) {
-		
-		printf("\n tab[%d] = %d",i, *(tab.elt + i));
-	}
 
-	return(1);
-}
 
 int setElement(TABLEAU* tab, int pos, int element) {
 	//tab [0] correspond à la position 1 d'après la consigne
@@ -75,19 +67,22 @@ int displayElements(TABLEAU* tab, int startPos, int endPos)
 		return(-1);// Si pas de tableau on retourne -1
 	}
 	
-	if (endPos > tab->size) {//Si on veut afficher plus que ce qui existe on reduit endpos pour afficher le tableau jusqu'a la fin
-		endPos = tab->size;
-		printf("\n Certaines positions demandees n'existe pas, l'affichage s'arrete a la dernière position du tableau\n");
-	}
-	 if (startPos >= endPos) {//La consigne ne precisez pas la facon de traiter ce cas, j'ai donc choisi de le traiter comme ceci
-		printf("\n tab[%d] positon :%d   = %d", endPos-1, endPos, *(tab->elt + endPos-1));//Si startPos>=endPos on affiche EndPos
-		return(0);
-	}
-
 	if (startPos < 1) {// Si on start post negatif on met startPos à 0
 		startPos = 1;
-		printf("Les tableau n'ont pas de position négatives. Le tableau affiche les valeurs à partir de l'indexe 0");
+		printf("\n Certaines positions demandees n'existent pas. L'affichichage du tableau commence a la position 1 ");
 	}
+	if (endPos > tab->size) {//Si on veut afficher plus que ce qui existe on reduit endpos pour afficher le tableau jusqu'a la fin
+		endPos = tab->size;
+		printf("\n Certaines positions demandees n'existent pas. L'affichage du tableau s'arrete a la derniere position du tableau\n");
+	}
+	 if (startPos >= endPos) { // Dans le cas ou startPos est superieur a EndPos on intervertit les valeurs de starPos et endPos
+		 int transit;
+		 transit = startPos;
+		 startPos = endPos;
+		 endPos = transit;
+	}
+
+
 
 	for (int i = startPos; i < endPos+1; i++) {//On affiche les elements compris entre startPos et endPos
 
@@ -100,9 +95,25 @@ int displayElements(TABLEAU* tab, int startPos, int endPos)
 
 int deleteElements(TABLEAU* tab, int startPos, int endPos)
 // J'ai choisi que cette fonction supprimer tout les elments de l'intervalle ferme [stardPos ; endPos]
+//tab [0] correspond à la position 1. Pour garder la meme logique que la fonction précédente
 {
 	if (tab->elt == NULL) {
 		return(-1);
+	}
+	//dans le cas ou endPos est superieur à la taille du tableau on supprimer tout le tableau de starPos à la fin
+	if (endPos > tab->size) {
+		endPos = tab->size;
+	}
+	// dans le cas ou startPos est inferieur à 1 on suuprime tous le tableau de 1 à endPos
+	if (startPos < 1) {
+		startPos = 1;
+	}
+	// Dans le cas ou startPos est superieur a EndPos on intervertit les valeurs de starPos et endPos
+	if (startPos > endPos) {
+		int transit;
+		transit = startPos;
+		startPos = endPos;
+		endPos = transit;
 	}
 	int NbElementSuppr = 0,NewSize=0; 
 	NbElementSuppr = endPos - startPos +1;// Nombre d'elts que l'on veut supprimer du tableau
@@ -112,11 +123,16 @@ int deleteElements(TABLEAU* tab, int startPos, int endPos)
 	}
 	int j=0;
 	for (j; j < NbElementSuppr; j++) {
-		*(tab->elt + startPos -1 + j) = *(tab->elt + endPos + j);// On met les elments placé après la zone de suppression a la place de ceux qui vont etre surpprime
+		*(tab->elt + startPos -1 + j) = *(tab->elt + endPos + j);// On met les elements placé après la zone de suppression a la place de ceux qui vont etre surpprime
 	}
-	//tab->size = NewSize;
-	//free(tab->elt + startPos + j);
+	tab->size = NewSize;
 
+	if (tab->size == 0) {// Cas ou l'on supprime tous le tableau
+		free(tab->elt);
+		return 0;
+	}
+	//Libération des adresses mémoires en trop en allouants le tableau avec sa nouvelle taille a une autre adresse
+	tab->elt = (int*)realloc(tab->elt, tab->size * sizeof(int));
 	
 
 	return 0;
